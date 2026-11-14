@@ -1,0 +1,22 @@
+<!DOCTYPE html><html lang="gu"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Passenger Login | INDIAN TAXI</title>
+<style>*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial;background:#f3f4f6;display:flex;justify-content:center;align-items:center;padding:20px}.card{width:100%;max-width:430px;background:#fff;padding:32px;border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.09)}input{width:100%;padding:14px;border:1px solid #d1d5db;border-radius:9px;font-size:16px}button{width:100%;padding:15px;margin-top:22px;background:#f59e0b;border:none;border-radius:9px;font-weight:bold;cursor:pointer}label{display:block;margin:17px 0 8px;font-weight:600}</style></head>
+<body><main class="card"><div style="text-align:center"><div style="width:55px;height:55px;background:#f59e0b;display:inline-flex;align-items:center;justify-content:center;border-radius:15px;font-size:27px;font-weight:bold">I</div><h1>INDIAN TAXI</h1><p>તમારી મુસાફરી, અમારી જવાબદારી.</p></div>
+<div style="background:#fff7ed;padding:12px;border-radius:9px;text-align:center;font-weight:bold" id="roleTitle">Passenger Login</div>
+<form id="loginForm"><label>મોબાઇલ નંબર</label><input id="mobile" placeholder="10 અંકનો મોબાઇલ નંબર" maxlength="10" required><label>Password</label><input id="password" type="password" placeholder="Password" required><button>Login - લોગિન</button></form>
+<p id="msg" style="text-align:center;color:#b45309"></p><p style="text-align:center">નવું એકાઉન્ટ? <a href="/auth/register.html">Registration કરો</a><br><a href="/">← Home</a></p></main>
+<script>
+const params=new URLSearchParams(location.search); const role=params.get('role')||'passenger';
+document.getElementById('roleTitle').textContent={passenger:'Passenger Login',driver:'Driver Login',admin:'Admin Login'}[role]||'Passenger Login';
+document.getElementById('loginForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  let mobile=document.getElementById('mobile').value.trim(); let pw=document.getElementById('password').value;
+  if(!/^[6-9][0-9]{9}$/.test(mobile)) return document.getElementById('msg').textContent='માન્ય 10 અંકનો નંબર આપો';
+  try{
+    let r=await fetch('http://127.0.0.1:8001/api/v1/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:mobile,password:pw})});
+    let d=await r.json(); if(!r.ok) throw new Error(d.detail||'Login Failed');
+    localStorage.setItem('taxi_token',d.access_token); localStorage.setItem('taxi_user',JSON.stringify(d.user));
+    document.getElementById('msg').textContent='✅ Login Success! Dashboard ખૂલે છે...';
+    setTimeout(()=> location.href='/dashboard.html',800);
+  }catch(err){ document.getElementById('msg').textContent=err.message; }
+});
+</script></body></html>

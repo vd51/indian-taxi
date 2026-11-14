@@ -1,0 +1,15 @@
+<!DOCTYPE html><html lang="gu"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Passenger Dashboard | INDIAN TAXI</title>
+<style>body{font-family:system-ui;background:#FFF7ED;margin:0;padding:15px}.card{background:#fff;padding:16px;margin:10px 0;border-radius:20px;box-shadow:0 5px 20px rgba(0,0,0,.08)}.btn{background:#FF6B00;color:#fff;padding:14px;border:none;border-radius:12px;width:100%;font-weight:800}input,select{width:100%;padding:12px;margin:6px 0;border:1px solid #ddd;border-radius:10px}</style></head>
+<body><h1>🚖 Passenger Dashboard</h1><div class="card"><b id="userName">Welcome</b><p id="userPhone"></p><p>Wallet: ₹250 | ⭐ 4.9 | Total Rides: <span id="totalRides">0</span></p><button onclick="logout()" style="background:#111;color:#fff;padding:10px;border-radius:10px;border:none">Logout - લોગઆઉટ</button></div>
+<div class="card"><h3>📍 Book Ride</h3><input id="pickup" value="Daman Bus Stand"><input id="drop" value="Vapi Station"><select id="vehicle"><option value="BIKE">🏍️ Bike ₹8/km</option><option value="AUTO" selected>🛺 Auto ₹12/km</option><option value="MINI">🚗 Mini ₹15/km</option><option value="SEDAN">🚙 Sedan ₹18/km</option><option value="SUV">🚐 SUV ₹22/km</option><option value="LUXURY">✨ Luxury ₹50/km</option></select><select id="pay"><option>UPI</option><option>Cash</option><option>Wallet</option></select><button class="btn" onclick="book()">Book Now</button><p id="res"></p></div>
+<div class="card"><h3>📜 History</h3><div id="history">Loading...</div></div>
+<script>
+let user=JSON.parse(localStorage.getItem('taxi_user')||'{}');
+if(!user.phone) location.href='/auth/login.html';
+document.getElementById('userName').textContent='Welcome, '+user.full_name;
+document.getElementById('userPhone').textContent='📱 '+user.phone+' | Role: '+user.role;
+async function load(){ let r=await fetch('http://127.0.0.1:8001/api/v1/dashboard'); let d=await r.json(); document.getElementById('totalRides').textContent=d.total_bookings; document.getElementById('history').innerHTML=d.history.map(h=>`<div>${h.pickup} → ${h.drop} | ${h.vehicle} | ₹${h.fare}</div>`).join(''); }
+async function book(){ let r=await fetch('http://127.0.0.1:8001/api/v1/auth/me',{headers:{Authorization:'Bearer '+localStorage.getItem('taxi_token')}}); document.getElementById('res').textContent='✅ Booking Done! '+document.getElementById('pickup').value+' → '+document.getElementById('drop').value+' | Driver Assigned'; }
+async function logout(){ await fetch('http://127.0.0.1:8001/api/v1/auth/logout',{method:'POST',headers:{Authorization:'Bearer '+localStorage.getItem('taxi_token')}}); localStorage.clear(); location.href='/auth/login.html'; }
+load();
+</script></body></html>

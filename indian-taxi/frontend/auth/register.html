@@ -1,0 +1,39 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Passenger Registration | INDIAN TAXI</title>
+<style>*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui;background:#f3f4f6;display:flex;justify-content:center;padding:20px}.c{width:100%;max-width:460px;background:#fff;padding:32px;border-radius:20px;box-shadow:0 12px 40px rgba(0,0,0,.08)}input{width:100%;padding:13px;border:1px solid #d1d5db;border-radius:10px;font-size:16px}label{display:block;margin:15px 0 7px;font-weight:650}button{width:100%;margin-top:22px;padding:14px;border:0;border-radius:10px;background:#f59e0b;font-weight:750;cursor:pointer}.msg{display:none;padding:12px;margin-top:16px;border-radius:9px}.msg.err{display:block;background:#fee2e2}.msg.ok{display:block;background:#dcfce7}.hidden{display:none}</style></head>
+<body><main class="c"><div style="text-align:center"><strong style="font-size:25px">INDIAN <span style="color:#f59e0b">TAXI</span></strong></div>
+<section id="regSec"><h1>Create Passenger Account</h1><form id="regForm"><label>Full Name</label><input id="fullName" required><label>Mobile Number</label><input id="phone" placeholder="+91 9876543210" required><label>Email (Optional)</label><input id="email" type="email"><label>Password</label><input id="password" type="password" minlength="8" required><label>Confirm Password</label><input id="confirmPassword" type="password" required><button>Register & Send OTP</button></form></section>
+<section id="otpSec" class="hidden"><h1>Verify Mobile Number</h1><p>Enter 6-digit OTP - Development માં OTP Screen પર દેખાશે</p><form id="otpForm"><input id="otp" placeholder="Enter 6-digit OTP" maxlength="6" required><button>Verify & Create Account</button></form><p id="devOtp" style="color:#b45309;font-weight:700"></p></section>
+<div id="msg" class="msg"></div><p style="text-align:center">Already registered? <a href="/auth/login.html">Login</a></p><a href="/">← Back to Home</a></main>
+<script>
+const API_BASE="http://127.0.0.1:8001/api/v1/auth";
+let challengeId=null, regPhone=null;
+function showMsg(m, ok=false){let e=document.getElementById('msg'); e.textContent=m; e.className='msg '+(ok?'ok':'err');}
+document.getElementById('regForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  let fullName=document.getElementById('fullName').value.trim();
+  let phone=document.getElementById('phone').value.trim().replace('+91','').replace(/ /g,'');
+  let email=document.getElementById('email').value.trim();
+  let pw=document.getElementById('password').value, cp=document.getElementById('confirmPassword').value;
+  if(pw!==cp) return showMsg('Passwords do not match');
+  if(!/^[6-9][0-9]{9}$/.test(phone)) return showMsg('માન્ય 10 અંકનો નંબર આપો');
+  try{
+    let r=await fetch(API_BASE+'/register/request',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({full_name:fullName,phone,email:email||null,password:pw})});
+    let d=await r.json(); if(!r.ok) throw new Error(d.detail||'Failed');
+    challengeId=d.challenge_id; regPhone=phone;
+    document.getElementById('regSec').classList.add('hidden'); document.getElementById('otpSec').classList.remove('hidden');
+    if(d.dev_otp) document.getElementById('devOtp').textContent='DEV OTP (Development): '+d.dev_otp;
+    showMsg('OTP Sent! '+ (d.dev_otp? 'Dev OTP: '+d.dev_otp:''), true);
+  }catch(err){ showMsg(err.message); }
+});
+document.getElementById('otpForm').addEventListener('submit', async e=>{
+  e.preventDefault();
+  let otp=document.getElementById('otp').value.trim();
+  try{
+    let r=await fetch(API_BASE+'/register/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({challenge_id:challengeId,phone:regPhone,otp})});
+    let d=await r.json(); if(!r.ok) throw new Error(d.detail||'Failed');
+    localStorage.setItem('taxi_token', d.access_token); localStorage.setItem('taxi_user', JSON.stringify(d.user));
+    showMsg('✅ Account Created! Redirecting to Dashboard...', true);
+    setTimeout(()=> location.href='/dashboard.html', 1000);
+  }catch(err){ showMsg(err.message); }
+});
+</script></body></html>

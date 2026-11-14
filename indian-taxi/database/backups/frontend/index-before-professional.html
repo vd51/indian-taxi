@@ -1,0 +1,936 @@
+
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#101827">
+
+<title>INDIAN TAXI | Smart Ride Booking</title>
+
+<meta name="description" content="INDIAN TAXI - Book Bike, Auto, Cab and Premium rides across India.">
+
+<style>
+:root {
+  --bg: #f4f6fa;
+  --card: #ffffff;
+  --text: #172033;
+  --muted: #687386;
+  --primary: #f5a623;
+  --border: #e5e9f0;
+  --dark: #101827;
+  --shadow: 0 8px 28px rgba(20,30,50,.08);
+}
+
+body.dark {
+  --bg: #101827;
+  --card: #1b2638;
+  --text: #f5f7fb;
+  --muted: #b4bfd0;
+  --border: #344157;
+  --shadow: 0 8px 28px rgba(0,0,0,.2);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  transition: .25s;
+}
+
+button, input, select {
+  font: inherit;
+}
+
+button, a {
+  cursor: pointer;
+}
+
+header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar {
+  max-width: 1250px;
+  margin: auto;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -1px;
+}
+
+.logo span {
+  color: var(--primary);
+}
+
+.nav-links {
+  display: flex;
+  gap: 23px;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.small-btn {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  padding: 9px 12px;
+  border-radius: 9px;
+}
+
+.hero {
+  max-width: 1250px;
+  margin: auto;
+  padding: 65px 20px 35px;
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: 35px;
+  align-items: center;
+}
+
+.hero-tag {
+  display: inline-block;
+  background: #fff0cf;
+  color: #865300;
+  padding: 8px 13px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: clamp(35px, 5vw, 58px);
+  line-height: 1.13;
+  margin-bottom: 18px;
+}
+
+.hero h1 span {
+  color: var(--primary);
+}
+
+.hero p {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.7;
+  max-width: 550px;
+}
+
+.hero-visual {
+  min-height: 330px;
+  background: linear-gradient(135deg,#17243b,#344969);
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  box-shadow: var(--shadow);
+  padding: 25px;
+  text-align: center;
+}
+
+.hero-visual .car {
+  font-size: 100px;
+  margin: 20px;
+}
+
+.hero-visual h2 {
+  font-size: 25px;
+}
+
+.hero-visual p {
+  color: #dce5f2;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.container {
+  max-width: 1250px;
+  margin: auto;
+  padding: 25px 20px 55px;
+}
+
+.section-title {
+  font-size: 29px;
+  margin-bottom: 9px;
+}
+
+.section-subtitle {
+  color: var(--muted);
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+.booking-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.panel {
+  background: var(--card);
+  padding: 25px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+}
+
+.panel h3 {
+  font-size: 21px;
+  margin-bottom: 20px;
+}
+
+.field {
+  margin-bottom: 17px;
+}
+
+.field label {
+  display: block;
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.field input, .field select {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 10px;
+  outline: none;
+}
+
+.field input:focus {
+  border-color: var(--primary);
+}
+
+.vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 12px;
+}
+
+.vehicle {
+  background: var(--bg);
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 13px;
+  padding: 15px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.vehicle:hover, .vehicle.selected {
+  border-color: var(--primary);
+  background: rgba(245,166,35,.10);
+}
+
+.vehicle .icon {
+  font-size: 35px;
+  margin-bottom: 8px;
+}
+
+.vehicle strong {
+  display: block;
+  font-size: 14px;
+}
+
+.vehicle small {
+  color: var(--muted);
+  display: block;
+  margin-top: 6px;
+}
+
+.fare-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg);
+  padding: 16px;
+  margin-top: 18px;
+  border-radius: 12px;
+}
+
+.fare-box strong {
+  color: var(--primary);
+  font-size: 24px;
+}
+
+.primary-btn {
+  background: var(--primary);
+  color: #172033;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 11px;
+  width: 100%;
+  font-weight: 800;
+  margin-top: 18px;
+  font-size: 16px;
+}
+
+.primary-btn:hover {
+  filter: brightness(.95);
+}
+
+.note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 12px;
+}
+
+.roles {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 20px;
+}
+
+.role-card {
+  background: var(--card);
+  padding: 25px;
+  border: 1px solid var(--border);
+  border-radius: 17px;
+  box-shadow: var(--shadow);
+}
+
+.role-card .icon {
+  font-size: 35px;
+  margin-bottom: 15px;
+}
+
+.role-card h3 {
+  margin-bottom: 10px;
+}
+
+.role-card p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 48px;
+}
+
+.role-card a {
+  display: inline-block;
+  color: var(--text);
+  text-decoration: none;
+  background: var(--primary);
+  padding: 11px 16px;
+  border-radius: 8px;
+  margin-top: 17px;
+  font-weight: bold;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 16px;
+}
+
+.feature {
+  padding: 22px;
+  border-radius: 15px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.feature div {
+  font-size: 30px;
+  margin-bottom: 12px;
+}
+
+.feature p {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.app-banner {
+  background: #17243b;
+  color: white;
+  padding: 35px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.app-banner p {
+  color: #cbd5e1;
+  margin-top: 10px;
+}
+
+.app-banner a {
+  display: inline-block;
+  background: var(--primary);
+  color: #172033;
+  padding: 14px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+footer {
+  background: #101827;
+  color: white;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+footer p {
+  color: #b4bfd0;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+@media(max-width:850px) {
+  .nav-links {
+    display: none;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding-top: 40px;
+  }
+
+  .booking-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .features {
+    grid-template-columns: repeat(2,1fr);
+  }
+}
+
+@media(max-width:550px) {
+  .navbar {
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    font-size: 21px;
+  }
+
+  .nav-actions {
+    gap: 5px;
+  }
+
+  .small-btn {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .hero h1 {
+    font-size: 37px;
+  }
+
+  .roles {
+    grid-template-columns: 1fr;
+  }
+
+  .vehicle-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .features {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .app-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .panel {
+    padding: 18px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <nav class="navbar">
+
+    <div class="logo">INDIAN <span>TAXI</span></div>
+
+    <div class="nav-links">
+      <a href="#home" data-i18n="home">હોમ</a>
+      <a href="#booking" data-i18n="booking">બુકિંગ</a>
+      <a href="#services" data-i18n="services">સેવાઓ</a>
+      <a href="#accounts" data-i18n="accounts">લોગિન</a>
+    </div>
+
+    <div class="nav-actions">
+      <select class="small-btn" id="language" aria-label="Language">
+        <option value="gu">ગુજરાતી</option>
+        <option value="en">English</option>
+      </select>
+
+      <button class="small-btn" id="themeBtn" type="button">
+        🌙
+      </button>
+    </div>
+
+  </nav>
+</header>
+
+<main>
+
+<section class="hero" id="home">
+
+  <div>
+    <span class="hero-tag">🇮🇳 INDIA'S SMART MOBILITY PLATFORM</span>
+
+    <h1>
+      <span data-i18n="hero1">તમારી મુસાફરી</span>
+      <span data-i18n="hero2">હવે સરળ અને સ્માર્ટ</span>
+    </h1>
+
+    <p data-i18n="heroText">
+      Bike, Auto, Cab અને Premium વાહનો બુક કરો.
+      સુરક્ષિત, સરળ અને વિશ્વસનીય મુસાફરીનો અનુભવ મેળવો.
+    </p>
+
+  </div>
+
+  <div class="hero-visual">
+    <div class="car">🚕</div>
+    <h2>INDIAN TAXI</h2>
+    <p>One Platform. Multiple Vehicles. Smarter Rides.</p>
+  </div>
+
+</section>
+
+<section class="container" id="booking">
+
+  <h2 class="section-title" data-i18n="bookTitle">
+    તમારી રાઇડ બુક કરો
+  </h2>
+
+  <p class="section-subtitle" data-i18n="bookSub">
+    Pickup અને Destination પસંદ કરો અને તમારું વાહન પસંદ કરો.
+  </p>
+
+  <div class="booking-layout">
+
+    <div class="panel">
+
+      <h3 data-i18n="tripDetails">📍 મુસાફરીની વિગતો</h3>
+
+      <div class="field">
+        <label data-i18n="pickup">Pickup Location</label>
+        <input id="pickup" type="text"
+          placeholder="Enter pickup location">
+      </div>
+
+      <div class="field">
+        <label data-i18n="destination">Destination</label>
+        <input id="destination" type="text"
+          placeholder="Enter destination">
+      </div>
+
+      <div class="field">
+        <label data-i18n="payment">Payment Method</label>
+        <select id="payment">
+          <option value="cash">Cash</option>
+          <option value="upi">UPI</option>
+          <option value="online">Online Payment</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label data-i18n="schedule">Ride Schedule</label>
+        <select id="schedule">
+          <option value="now">Book Now</option>
+          <option value="later">Schedule for Later</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="panel">
+
+      <h3 data-i18n="vehicleTitle">🚘 વાહન પસંદ કરો</h3>
+
+      <div class="vehicle-grid">
+
+        <div class="vehicle selected"
+          data-type="bike" data-fare="25">
+          <div class="icon">🏍️</div>
+          <strong>Bike</strong>
+          <small>₹25+</small>
+        </div>
+
+        <div class="vehicle"
+          data-type="auto" data-fare="40">
+          <div class="icon">🛺</div>
+          <strong>Auto</strong>
+          <small>₹40+</small>
+        </div>
+
+        <div class="vehicle"
+          data-type="economy" data-fare="60">
+          <div class="icon">🚗</div>
+          <strong>Economy</strong>
+          <small>₹60+</small>
+        </div>
+
+        <div class="vehicle"
+          data-type="premium" data-fare="100">
+          <div class="icon">🚙</div>
+          <strong>Premium</strong>
+          <small>₹100+</small>
+        </div>
+
+        <div class="vehicle"
+          data-type="suv" data-fare="150">
+          <div class="icon">🚐</div>
+          <strong>SUV</strong>
+          <small>₹150+</small>
+        </div>
+
+        <div class="vehicle"
+          data-type="parcel" data-fare="50">
+          <div class="icon">📦</div>
+          <strong>Parcel</strong>
+          <small>₹50+</small>
+        </div>
+
+      </div>
+
+      <div class="fare-box">
+        <span data-i18n="estimate">Estimated Starting Fare</span>
+        <strong id="fare">₹25+</strong>
+      </div>
+
+      <button class="primary-btn" id="bookBtn"
+        type="button" data-i18n="bookBtn">
+        🚕 BOOK YOUR RIDE
+      </button>
+
+      <p class="note" data-i18n="fareNote">
+        આ માત્ર Demo Starting Fare છે. વાસ્તવિક ભાડું
+        Backend Fare Engine દ્વારા નક્કી થશે.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<section class="container" id="accounts">
+
+  <h2 class="section-title" data-i18n="portalTitle">
+    તમારા એકાઉન્ટમાં પ્રવેશ કરો
+  </h2>
+
+  <p class="section-subtitle" data-i18n="portalSub">
+    તમારી ભૂમિકા પ્રમાણે અલગ Portal પસંદ કરો.
+  </p>
+
+  <div class="roles">
+
+    <div class="role-card">
+      <div class="icon">👤</div>
+      <h3>Passenger Portal</h3>
+      <p data-i18n="passengerText">
+        Ride Booking, Live Tracking, Payments અને Trip History.
+      </p>
+      <a href="/passenger/login.html">Passenger Login →</a>
+    </div>
+
+    <div class="role-card">
+      <div class="icon">🚕</div>
+      <h3>Driver Portal</h3>
+      <p data-i18n="driverText">
+        Online Status, Ride Requests, Earnings અને Driver Profile.
+      </p>
+      <a href="/driver/login.html">Driver Login →</a>
+    </div>
+
+    <div class="role-card">
+      <div class="icon">🛡️</div>
+      <h3>Admin Portal</h3>
+      <p data-i18n="adminText">
+        Users, Drivers, Bookings, Payments અને Business Analytics.
+      </p>
+      <a href="/admin/login.html">Admin Login →</a>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="container" id="services">
+
+  <h2 class="section-title" data-i18n="featureTitle">
+    INDIAN TAXI ની મુખ્ય સુવિધાઓ
+  </h2>
+
+  <p class="section-subtitle" data-i18n="featureSub">
+    એક જ પ્લેટફોર્મમાં આધુનિક પરિવહન સુવિધાઓ.
+  </p>
+
+  <div class="features">
+
+    <div class="feature">
+      <div>📍</div>
+      <h3>Live Tracking</h3>
+      <p>Driver Location અને Trip Tracking.</p>
+    </div>
+
+    <div class="feature">
+      <div>💳</div>
+      <h3>Smart Payments</h3>
+      <p>Cash, UPI અને Online Payment.</p>
+    </div>
+
+    <div class="feature">
+      <div>🔐</div>
+      <h3>Secure Accounts</h3>
+      <p>Role-Based Login અને Account Security.</p>
+    </div>
+
+    <div class="feature">
+      <div>🌐</div>
+      <h3>Multi Language</h3>
+      <p>Gujarati અને English સહિત વધુ ભાષાઓ.</p>
+    </div>
+
+  </div>
+
+</section>
+
+<section class="container" id="download">
+
+  <div class="app-banner">
+
+    <div>
+      <h2>INDIAN TAXI Mobile App</h2>
+      <p>Book rides directly from your smartphone.</p>
+    </div>
+
+    <a href="#download" id="playStore">
+      ▶ Google Play Store
+    </a>
+
+  </div>
+
+  <p class="note">
+    Official Play Store listing ઉપલબ્ધ થયા પછી અહીં
+    વાસ્તવિક App URL ઉમેરવાનું રહેશે.
+  </p>
+
+</section>
+
+</main>
+
+<footer>
+  <div class="logo" style="color:white">
+    INDIAN <span>TAXI</span>
+  </div>
+
+  <p>© 2026 INDIAN TAXI. All Rights Reserved.</p>
+  <p>Smart Mobility Platform | Made for India 🇮🇳</p>
+</footer>
+
+<script>
+
+const translations = {
+
+gu: {
+home: "હોમ",
+booking: "બુકિંગ",
+services: "સેવાઓ",
+accounts: "લોગિન",
+hero1: "તમારી મુસાફરી",
+hero2: "હવે સરળ અને સ્માર્ટ",
+heroText: "Bike, Auto, Cab અને Premium વાહનો બુક કરો. સુરક્ષિત, સરળ અને વિશ્વસનીય મુસાફરીનો અનુભવ મેળવો.",
+bookTitle: "તમારી રાઇડ બુક કરો",
+bookSub: "Pickup અને Destination પસંદ કરો અને તમારું વાહન પસંદ કરો.",
+tripDetails: "📍 મુસાફરીની વિગતો",
+pickup: "Pickup Location",
+destination: "Destination",
+payment: "Payment Method",
+schedule: "Ride Schedule",
+vehicleTitle: "🚘 વાહન પસંદ કરો",
+estimate: "શરૂઆતનું અંદાજિત ભાડું",
+bookBtn: "🚕 તમારી રાઇડ બુક કરો",
+fareNote: "આ માત્ર Demo Starting Fare છે. વાસ્તવિક ભાડું Backend Fare Engine દ્વારા નક્કી થશે.",
+portalTitle: "તમારા એકાઉન્ટમાં પ્રવેશ કરો",
+portalSub: "તમારી ભૂમિકા પ્રમાણે અલગ Portal પસંદ કરો.",
+passengerText: "Ride Booking, Live Tracking, Payments અને Trip History.",
+driverText: "Online Status, Ride Requests, Earnings અને Driver Profile.",
+adminText: "Users, Drivers, Bookings, Payments અને Business Analytics.",
+featureTitle: "INDIAN TAXI ની મુખ્ય સુવિધાઓ",
+featureSub: "એક જ પ્લેટફોર્મમાં આધુનિક પરિવહન સુવિધાઓ."
+},
+
+en: {
+home: "Home",
+booking: "Booking",
+services: "Services",
+accounts: "Login",
+hero1: "Your Journey",
+hero2: "Made Simple & Smart",
+heroText: "Book Bike, Auto, Cab and Premium vehicles. Enjoy a safe, easy and reliable travel experience.",
+bookTitle: "Book Your Ride",
+bookSub: "Choose your pickup, destination and vehicle.",
+tripDetails: "📍 Trip Details",
+pickup: "Pickup Location",
+destination: "Destination",
+payment: "Payment Method",
+schedule: "Ride Schedule",
+vehicleTitle: "🚘 Select Vehicle",
+estimate: "Estimated Starting Fare",
+bookBtn: "🚕 BOOK YOUR RIDE",
+fareNote: "This is only a demo starting fare. Actual fare will be calculated by the Backend Fare Engine.",
+portalTitle: "Access Your Account",
+portalSub: "Choose a portal according to your role.",
+passengerText: "Ride Booking, Live Tracking, Payments and Trip History.",
+driverText: "Online Status, Ride Requests, Earnings and Driver Profile.",
+adminText: "Users, Drivers, Bookings, Payments and Business Analytics.",
+featureTitle: "INDIAN TAXI Features",
+featureSub: "Modern mobility services in one platform."
+}
+
+};
+
+const language = document.getElementById("language");
+
+language.addEventListener("change", function() {
+
+  const lang = this.value;
+  const words = translations[lang];
+
+  document.documentElement.lang = lang;
+
+  document.querySelectorAll("[data-i18n]").forEach(element => {
+    const key = element.dataset.i18n;
+    if (words[key]) {
+      element.textContent = words[key];
+    }
+  });
+
+});
+
+const themeBtn = document.getElementById("themeBtn");
+
+if (localStorage.getItem("indianTaxiTheme") === "dark") {
+  document.body.classList.add("dark");
+  themeBtn.textContent = "☀️";
+}
+
+themeBtn.addEventListener("click", () => {
+
+  document.body.classList.toggle("dark");
+
+  const dark = document.body.classList.contains("dark");
+
+  themeBtn.textContent = dark ? "☀️" : "🌙";
+
+  localStorage.setItem(
+    "indianTaxiTheme",
+    dark ? "dark" : "light"
+  );
+
+});
+
+let selectedVehicle = "bike";
+let selectedFare = 25;
+
+document.querySelectorAll(".vehicle").forEach(vehicle => {
+
+  vehicle.addEventListener("click", () => {
+
+    document.querySelectorAll(".vehicle").forEach(v => {
+      v.classList.remove("selected");
+    });
+
+    vehicle.classList.add("selected");
+
+    selectedVehicle = vehicle.dataset.type;
+    selectedFare = Number(vehicle.dataset.fare);
+
+    document.getElementById("fare").textContent =
+      "₹" + selectedFare + "+";
+
+  });
+
+});
+
+document.getElementById("bookBtn").addEventListener("click", () => {
+
+  const pickup = document.getElementById("pickup").value.trim();
+  const destination = document.getElementById("destination").value.trim();
+
+  if (!pickup || !destination) {
+    alert("Please enter Pickup and Destination.");
+    return;
+  }
+
+  if (pickup.toLowerCase() === destination.toLowerCase()) {
+    alert("Pickup and Destination cannot be the same.");
+    return;
+  }
+
+  const payment = document.getElementById("payment").value;
+
+  alert(
+    "INDIAN TAXI Demo Booking\n\n" +
+    "Pickup: " + pickup + "\n" +
+    "Destination: " + destination + "\n" +
+    "Vehicle: " + selectedVehicle + "\n" +
+    "Starting Fare: ₹" + selectedFare + "+\n" +
+    "Payment: " + payment + "\n\n" +
+    "Frontend Ready. Backend API Integration Pending."
+  );
+
+});
+
+</script>
+
+</body>
+</html>
